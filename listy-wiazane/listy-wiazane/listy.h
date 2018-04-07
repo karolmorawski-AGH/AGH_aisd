@@ -1,11 +1,6 @@
 #pragma once
 
-struct node
-{
-	int val;
-	node* next;
-	node* prev;
-};
+extern struct node;
 void show(node* H);
 void add(node* &H, int x);
 void readFile(char *filen, node *&H);
