@@ -1,2 +1,3 @@
-# AiSD-local
+# AiSD
 Algorytmy i struktury danych
+
