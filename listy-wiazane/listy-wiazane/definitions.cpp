@@ -9,7 +9,6 @@ using namespace std;
 //pokaz liste
 void show(node* H)
 {
-	cout << "Pedal";
 	node* p = H;
 	while (p != NULL)
 	{
@@ -213,5 +212,50 @@ void rmVal(node* &H, int x)
 
 }
 
-//dzielenie listy na 2
-void
+//dzielenie listy na 2 (input: pozycja i Header)
+void divide_list(node* &H, int x)
+{
+	//sprawdzanie liczy elementow w liscie
+	node* p = H;
+	int l_el = 0;
+
+	while (p != NULL)
+	{
+		l_el = l_el + 1;
+		p = p->next;
+	}
+	//wskaznik pomocniczy wraca na pierwszy element
+	p = H;
+	//tworzenie drugiej listy
+	node*H2 = new node;
+
+	//IF X!=0 OR X<L_EL
+
+	if (x > l_el || x == 0)
+	{
+		cout << "---------------------" << endl;
+		cout << "BLAD - wykroczono poza zakres lub lista jest pusta";
+		cout << endl << "---------------------" << endl<<endl;
+		return;
+	}
+
+	else
+	{
+		for (int i = 1; i < x - 1; i++)
+		{
+			p = p->next;
+		}
+
+		H2 = p->next;
+		p->next = NULL;
+
+		//pokazanie dwóch list
+		cout << "---------------------" << endl;
+		cout << "Pierwsza polowa listy (H1):     ";
+		show(H);
+		cout << endl << "Druga polowa listy (H2):        ";
+		show(H2);
+		cout << endl << "---------------------" << endl<<endl;
+	}
+	
+}
