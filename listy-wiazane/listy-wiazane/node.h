@@ -14,4 +14,7 @@ int swapNext(node* &H, int x);
 void insert(node* &H, int x, int pos);
 void rm(node* &H, int x);
 void rmVal(node* &H, int x);
+void remove(node* &H);
 void divide_list(node* &H, int x);
+void get_val(node* &H, int x);
+void set_val(node* &H, int x, int pos);

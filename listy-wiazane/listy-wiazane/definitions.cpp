@@ -259,3 +259,71 @@ void divide_list(node* &H, int x)
 	}
 	
 }
+
+//get - sciaganie wartosci z listy (input: pozycja i Header)
+void get_val(node* &H, int x)
+{
+	//sprawdzanie liczby elementow w liscie
+	node* p = H;
+	node* s = H;
+	int l_el = 0;
+
+	while (p != NULL)
+	{
+		l_el = l_el + 1;
+		p = p->next;
+	}
+	//wskaznik pomocniczy wraca na pierwszy element
+	p = H;
+
+	//tworzenie drugiej listy aby skopiowac zmienna
+	node* GET_HEADER;
+	GET_HEADER = NULL;
+	
+	//sciaganie wartosci i zapisywanie do drugiej listy
+	for (int i = 1; i < x - 1; i++)
+	{
+		p = p->next;
+	}
+	
+	add(GET_HEADER, p->val);
+
+	cout << "Wartosc z indeksu " << x << ": ";
+	show(GET_HEADER);
+	
+	//usuwanie GET_HEADER
+	p = GET_HEADER;
+	s = GET_HEADER->next;
+	delete s;
+	delete p;
+
+}
+
+//set - ustawianie wartosci z listy o podanym indeksie
+void set_val(node* &H, int x, int pos)
+{
+	node* temp = new node;
+	temp->val = x;
+
+	node* p = H;
+	node* s = H;
+
+	for (int i = 0; i < pos - 1; i++)
+	{
+		if (p->next != NULL)
+		{
+			p = p->next;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	if (p->next != NULL)
+	{
+		p->val = temp->val;
+		delete temp;
+	}
+
+}
