@@ -51,30 +51,23 @@ void readFile(char *filen, node *&H)
 }
 
 //zamiana elementu o wartosci x ze swoim poprzednikiem
-int swapPrev(node* &H, int x)
+void swapPrev(node* &H, int x)
 {
 	node* p = H;
 	node* s = H;
-	if (p == NULL || p->next == NULL)
-	{
-		cout << "Blad\n";
-		return 0;
-	}
-	while (p->next->next != NULL && p->next->next->val != x)
+	
+	for (int i = 1; i < x ; i++)
 	{
 		p = p->next;
 	}
+	node* tmp = new node;
+	s = p->next;
+	tmp->val = p->val;
+	p->val = s->val;
+	s->val = tmp->val;
+	delete tmp;
 
-	if (p->next != NULL && p->next->next != NULL)
-	{
-		s = p->next;
-		node* temp = new node;
-		temp->val = p->next->val;
-		p->next = s->next;
-		temp->next = p->next->next;
-		p->next->next = temp;
-		delete s;
-	}
+	
 }
 
 //zamiana elementu o wartosci x ze swoim nastepnikiem
@@ -261,7 +254,7 @@ void divide_list(node* &H, int x)
 }
 
 //get - sciaganie wartosci z listy (input: pozycja i Header)
-void get_val(node* &H, int x)
+int get_val(node* &H, int x)
 {
 	//sprawdzanie liczby elementow w liscie
 	node* p = H;
@@ -273,29 +266,23 @@ void get_val(node* &H, int x)
 		l_el = l_el + 1;
 		p = p->next;
 	}
-	//wskaznik pomocniczy wraca na pierwszy element
 	p = H;
 
-	//tworzenie drugiej listy aby skopiowac zmienna
-	node* GET_HEADER;
-	GET_HEADER = NULL;
-	
-	//sciaganie wartosci i zapisywanie do drugiej listy
-	for (int i = 1; i < x - 1; i++)
+	if (x > l_el)
 	{
-		p = p->next;
+		cout << "BLAD";
+		return -1;
+	}
+
+	else
+	{
+		for (int i = 1; i < x; i++)
+		{
+			p = p->next;
+		}
+		return p->val;
 	}
 	
-	add(GET_HEADER, p->val);
-
-	cout << "Wartosc z indeksu " << x << ": ";
-	show(GET_HEADER);
-	
-	//usuwanie GET_HEADER
-	p = GET_HEADER;
-	s = GET_HEADER->next;
-	delete s;
-	delete p;
 
 }
 
@@ -326,4 +313,104 @@ void set_val(node* &H, int x, int pos)
 		delete temp;
 	}
 
+}
+
+//sortowanie babelkowe (bool okresla czy rosnaco - 1 czy malejaco - 0) TODO: wskazniki tez skacza wiec dac p blizej i ewentualnie guarda
+void bubble_sort(node* &H, bool by)
+{
+	int l_el = 0;
+	node* p = H;
+	int j = 0;
+
+	while (p!=NULL)
+	{
+		p = p->next;
+		l_el = l_el + 1;
+	}
+	p = H;
+
+	
+	for (int i = j = 0; j < l_el - 1; j++)
+	{
+		for (int i = 1; i < l_el; i++)
+		{
+		//	cout << "Wartosc p: " << p->val << endl;
+		//	cout << "Porownanie: ";
+			//cout << p->val << " " << p->next->val << endl;
+			//show(H);
+			//cout << endl;
+			if (p->val > p->next->val)
+			{
+				swapPrev(H, i);
+			}
+			//cout << endl;
+			p = p->next;
+		}
+
+		p = H;
+	}
+	
+	
+
+}
+
+//zamiana z poprzednikiem -> caly node
+void swapPrev2(node* &H, int pos)
+{
+
+	node* p = H;
+	node* tmp;
+	int l_el=0;
+
+	while (p != NULL)
+	{
+		p = p->next;
+		l_el = l_el + 1;
+	}
+	p = H;
+	//sprawdzanie czy pos wykracza poza zakres
+	if (pos > l_el )
+	{
+		return;
+	}
+	
+	else if(pos==1)
+	{
+
+		node* b = H;
+		node* s;
+		node* del;
+		//guard
+		add(H, 0);
+		b = H;
+		s = b->next->next;
+		tmp = b->next;
+		b->next = s;
+		tmp->next = tmp->next->next;
+		s->next = tmp;
+		del = H;
+		H = H->next;
+		delete del;
+
+	}
+
+	else 
+	{
+		node* b=H;
+		node* s;
+		//znajdowanie elementu 
+		for (int i = 1; i <= pos-3; i++)
+		{
+			b = b->next;
+		}
+		
+		s = b->next->next;
+		tmp = b->next;
+		b->next = s;
+		tmp->next = tmp->next->next;
+		s->next = tmp;
+
+	
+		
+	}
 }
