@@ -328,20 +328,38 @@ void bubble_sort(node* &H, bool by)
 		l_el = l_el + 1;
 	}
 	p = H;
-
 	
-	for (int i = j = 0; j < l_el - 1; j++)
+	add(H, -1);
+	node* s = H;
+	for (int i = 0; i < l_el - 2; i++) //przed ostatnia wartoscia
 	{
-		for (int i = 1; i < l_el; i++)
+		p = p->next;
+	}
+	H = H->next;
+	s->next = NULL;
+	p->next->next = s;
+
+	p = H;
+
+	for (int j = 0; j < l_el-1; j++)
+	{
+		//cout << "ITERACJA " << j << endl;
+		for (int i = 0; i < l_el; i++)
 		{
-		//	cout << "Wartosc p: " << p->val << endl;
-		//	cout << "Porownanie: ";
+		//cout << "Wartosc p: " << p->val << endl;
+		//cout << "Porownanie: ";
 			//cout << p->val << " " << p->next->val << endl;
 			//show(H);
 			//cout << endl;
 			if (p->val > p->next->val)
 			{
-				swapPrev(H, i);
+				swapPrev2(H, i+1);
+				p = H;
+				//cout << "*swap*" << endl;
+				for (int k = 0; k < i-1; k++)
+				{
+					p = p->next;
+				}
 			}
 			//cout << endl;
 			p = p->next;
@@ -350,8 +368,13 @@ void bubble_sort(node* &H, bool by)
 		p = H;
 	}
 	
-	
-
+	for (int i = 0; i < l_el - 1; i++) //usuwanie guarda
+	{
+		p = p->next;
+	}
+	s = p->next;
+	p->next = NULL;
+	delete s;
 }
 
 //zamiana z poprzednikiem -> caly node
@@ -393,7 +416,7 @@ void swapPrev2(node* &H, int pos)
 		delete del;
 
 	}
-
+	
 	else 
 	{
 		node* b=H;
