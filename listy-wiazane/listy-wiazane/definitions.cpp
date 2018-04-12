@@ -20,18 +20,22 @@ void show(node* H)
 //dodaj do listy dwustronnej
 void add(node* &H, int x)
 {
-	node* tmp = new node;
+	node * tmp = new node;
 	tmp->val = x;
-	tmp->next = H;
-	H = tmp;
-	if (H != NULL)
-	{
+
+	if (H == NULL) {
+		H = tmp;
+		tmp->next = NULL;
+
+	}
+	else {
+		tmp->next = H;
+		H = tmp;
+
 		tmp->prev = NULL;
+		tmp->next->prev = H;
 	}
-	else
-	{
-		tmp->next->prev = NULL;
-	}
+
 }
 
 //czytaj z pliku
@@ -297,7 +301,7 @@ void set_val(node* &H, int x, int pos)
 
 	for (int i = 0; i < pos - 1; i++)
 	{
-		if (p->next != NULL)
+		if (p->next)
 		{
 			p = p->next;
 		}
@@ -306,16 +310,15 @@ void set_val(node* &H, int x, int pos)
 			break;
 		}
 	}
-
-	if (p->next != NULL)
-	{
+		
+		//ustawianie wartosci
 		p->val = temp->val;
 		delete temp;
-	}
+	
 
 }
 
-//sortowanie babelkowe (bool okresla czy rosnaco - 1 czy malejaco - 0) TODO: wskazniki tez skacza wiec dac p blizej i ewentualnie guarda
+//sortowanie babelkowe (bool okresla czy rosnaco - 1 czy malejaco - 0) T
 void bubble_sort(node* &H, bool by)
 {
 	int l_el = 0;
@@ -340,31 +343,21 @@ void bubble_sort(node* &H, bool by)
 	p->next->next = s;
 
 	p = H;
-
 	for (int j = 0; j < l_el-1; j++)
 	{
-		//cout << "ITERACJA " << j << endl;
 		for (int i = 0; i < l_el; i++)
 		{
-		//cout << "Wartosc p: " << p->val << endl;
-		//cout << "Porownanie: ";
-			//cout << p->val << " " << p->next->val << endl;
-			//show(H);
-			//cout << endl;
 			if (p->val > p->next->val)
 			{
 				swapPrev2(H, i+1);
 				p = H;
-				//cout << "*swap*" << endl;
 				for (int k = 0; k < i-1; k++)
 				{
 					p = p->next;
 				}
 			}
-			//cout << endl;
 			p = p->next;
 		}
-
 		p = H;
 	}
 	
@@ -436,4 +429,134 @@ void swapPrev2(node* &H, int pos)
 	
 		
 	}
+}
+
+//zamiana z dowolnym elementem
+void swapPos(node *& H, int pos1, int pos2) 
+{
+	//jesli pos1==pos2
+	if (pos1 == pos2) 
+	{
+		return;
+	}
+
+	//algorytm powinien zadzialac tak samo bez wzgledu na kolejnosc
+	if (pos1 > pos2) {
+		swap(pos1, pos2);
+	}
+	
+	//jesli lista pusta
+	if (H == NULL || H->next == NULL) {
+		return;
+	}
+
+	//more than one element
+
+	int i = 1;
+	
+
+	node * temp = H;
+
+	node * pom1 = NULL;
+	node * pom2 = NULL;
+
+	while (temp) {
+		if (i == pos1) {
+			pom1 = temp;
+		}
+
+		if (i == pos2) {
+			pom2 = temp;
+		}
+
+		i++;
+		temp = temp->next;
+	}
+
+	//nie istnieje jeden lub drugi element;
+	if (pom1 == NULL || pom2 == NULL) {
+		return;
+	}
+
+	//--------------------------------------------------------//
+	//nie sa obok siebie
+	if (pom1->next != pom2) {
+		node * pom2Next = pom2->next;
+		node * pom1Prev = pom1->prev;
+		node * pom2Prev = pom2->prev;
+
+		if (pom1->prev == NULL) {
+			H = pom2;
+
+			pom2->next = pom1->next;
+			pom2->prev->next = pom1;
+			pom1->next = pom2Next;
+
+			pom1->prev = pom2->prev;
+
+			if (pom1->next != NULL) {
+				pom1->next->prev = pom1;
+			}
+
+			pom2->prev = pom1Prev;
+			pom2->next->prev = pom2;
+			return;
+		}
+
+		pom1->prev->next = pom2;
+		pom2->next = pom1->next;
+		pom2->prev->next = pom1;
+		pom1->next = pom2Next;
+
+		pom1->prev = pom2->prev;
+
+		if (pom1->next != NULL) {
+			pom1->next->prev = pom1;
+		}
+
+		pom2->prev = pom1Prev;
+		pom2->next->prev = pom2;
+
+		return;
+	}
+
+	//obok siebie
+	if (pom1->next == pom2) {
+
+		node * pom2Next = pom2->next;
+
+		if (pom1->prev == NULL) {
+			H = pom2;
+
+		
+			pom2->next = pom1;
+			pom1->next = pom2Next;
+
+
+		
+			node * pointerZero = pom2->prev;
+			pom2->prev = NULL;
+			if (pom1->next == NULL)
+				pom1->prev = pom2;
+			pom1->next->prev = pointerZero;
+			return;
+		}
+
+		node * pom1Prev = pom1->prev;
+
+
+		pom1->prev->next = pom2;
+		pom2->next = pom1;
+		pom1->next = pom2Next;
+
+		pom2->prev = pom1Prev;
+		pom1->prev = pom2;
+		if (pom2Next != NULL) {
+			pom2Next->prev = pom1;
+		}
+
+		return;
+	}
+
+	return;
 }
