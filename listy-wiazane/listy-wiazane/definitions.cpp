@@ -560,3 +560,49 @@ void swapPos(node *& H, int pos1, int pos2)
 
 	return;
 }
+
+//insertion sort
+void insertion_sort(node* &H, bool by)
+{
+	if (H == NULL || H->next == NULL)
+	{
+		return;
+	}
+	//2 wartownikow ktore pomagaja dwom wskaznikom nie latac po calym nodzie
+	//gdy nastapi swap
+	add(H, 0);
+	add(H, NULL);
+
+	int count=2;
+	int position=2;
+	node* p = H->next->next;
+	node* q = H->next->next->next;
+	node* guard = H->next;
+	
+	while (q ->next!= NULL)
+	{
+		position++;
+		count++;
+		if (p->val > q->val)
+		{
+			while (p!=guard)
+			{
+				cout << endl;
+				show(H);
+				cout << endl;
+				//cout << endl << p->val << endl << q->val << endl;
+				p = p->prev->prev;
+				q = q->prev->prev;
+				swapPrev2(H, count + 1);
+				p = p->next;
+				q = q->next;
+			}
+		}
+			p = p->next->next;
+			q = q->next->next;
+	
+			
+	}
+
+	
+}

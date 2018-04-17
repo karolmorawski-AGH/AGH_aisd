@@ -21,3 +21,4 @@ void set_val(node* &H, int x, int pos);
 void bubble_sort(node* &H, bool by);
 void swapPrev2(node* &H, int pos);
 void swapPos(node *& head, int pos1, int pos2);
+void insertion_sort(node* &H, bool by);
