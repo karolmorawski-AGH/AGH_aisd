@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include <iostream>
 #include <fstream>
+#include <windows.h>
 #include <string>
 #include "node.h"
 
@@ -133,34 +134,17 @@ void insert(node* &H, int x, int pos)
 
 }
 
-//usuwanie elementu z pozycji
-void rm(node* &H, int x)
+//usuwanie elementów
+void rm(node *& H)
 {
-	node* p = H;
-	node* s = H;
 
-	for (int i = 0; i<x - 2; i++)
-	{
-		if (p->next == NULL)
-			return;
-		p = p->next;
-	}
+	node * temp = H;
+	H = H->next;
+	delete temp;
 
-	if (p->next != NULL && p != H)
-	{
-		s = p->next;
-		p->next = s->next;
-		delete s;
-	}
-
-	if (p->next == NULL)
-	{
-
-	}
 }
 
 //usuwanie elementow o podanej wartosci 
-
 void rmVal(node* &H, int x)
 {
 	node* p = H;
@@ -561,6 +545,48 @@ void swapPos(node *& H, int pos1, int pos2)
 	return;
 }
 
+//sort while adding elements
+void ordered_insert(node *&H, int x)
+{
+	node * pomocnik = new node;
+	pomocnik->val = x;
+
+	//jesli pusta
+	if (H == NULL)
+	{
+		H = pomocnik;
+		pomocnik->next = NULL;
+		return;
+	}
+
+	//element ktory chcemy wstawic mniejszy lub rowny obecnemu
+	if (H->val >= x) {
+		pomocnik->next = H;
+		H = pomocnik;
+		return;
+	}
+
+	node *tmp = H;
+
+	while (tmp != NULL)
+	{
+		if (tmp->next == NULL && tmp->val <= x)
+		{
+			tmp->next = pomocnik;
+			pomocnik->next = NULL;
+			return;
+		}
+
+		if (tmp->val <= x && tmp->next->val >= x)
+		{
+			pomocnik->next = tmp->next;
+			tmp->next = pomocnik;
+			return;
+		}
+		tmp = tmp->next;
+	}
+}
+
 //insertion sort
 void insertion_sort(node* &H, bool by)
 {
@@ -568,41 +594,78 @@ void insertion_sort(node* &H, bool by)
 	{
 		return;
 	}
-	//2 wartownikow ktore pomagaja dwom wskaznikom nie latac po calym nodzie
-	//gdy nastapi swap
-	add(H, 0);
-	add(H, NULL);
-
-	int count=2;
-	int position=2;
-	node* p = H->next->next;
-	node* q = H->next->next->next;
-	node* guard = H->next;
 	
-	while (q ->next!= NULL)
+	//guard
+	add(H, 0);
+	node* guard = H;
+	//pointers to linked list elements which may or may not be swapped if conditions met
+	node* p = H->next;
+	node* q = p->next;
+	//Helps track next positions
+	int iterator = 2;
+	//current position, input for swapPos()
+	int position = iterator;
+	//checks if q->val is the same EVERY while loop iteration; if isn't break loop
+	int check_val;
+
+	//WHILE LOOP HERE
+	while (q!= NULL)
 	{
-		position++;
-		count++;
+		position = iterator;
+		check_val = q->val;
 		if (p->val > q->val)
 		{
-			while (p!=guard)
+			while (q->val==check_val)
 			{
-				cout << endl;
+				//self-explanatory
+				if (p->val > q->val)
+				{
+					swapPos(H, position, position + 1);
+				}
+				//decrementing position because pointers are going to be decremented as well
+				position--;
+				//if 'p' is on guard
+				if (p->prev == NULL)
+				{
+					break;
+				}
+				//decrementing 'p' and 'q' positions
+				p = p->prev->prev;
+				//or if p is actually behind guard
+				if (p== NULL)
+				{
+					break;
+				}
+				q = p->next;
+
+				/*
+				//Check if in fact insertion sort
+				Sleep(200);
+				system("cls");
 				show(H);
 				cout << endl;
-				//cout << endl << p->val << endl << q->val << endl;
-				p = p->prev->prev;
-				q = q->prev->prev;
-				swapPrev2(H, count + 1);
-				p = p->next;
-				q = q->next;
+				*/
+				
 			}
+		
 		}
-			p = p->next->next;
-			q = q->next->next;
-	
-			
+		iterator++;
+		p = H;
+		q = H;
+		//not the fastest but the easiest way to move 'p' and 'q' to next iteration's position
+		for (int i = 0; i < iterator; i++)
+		{
+			q = q->next;
+		}
+		//if 'q' "happens" to get to the end of linked list
+		if (q == NULL)
+		{
+			break;
+		}
+		p = q->prev;
 	}
-
-	
+	//deleting guard...
+	node* DEL = H;
+	H = H->next;
+	delete DEL;
 }
