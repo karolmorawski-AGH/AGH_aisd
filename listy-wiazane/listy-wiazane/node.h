@@ -23,3 +23,5 @@ void swapPrev2(node* &H, int pos);
 void swapPos(node *& head, int pos1, int pos2);
 void ordered_insert(node *&H, int x);
 void insertion_sort(node* &H, bool by);
+void selection_sort(node * &H);
+void addFirst(node *& head, double value);

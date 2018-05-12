@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <string>
 #include "node.h"
+#include "limits.h"
 
 using namespace std;
 
@@ -40,7 +41,7 @@ void add(node* &H, int x)
 }
 
 //czytaj z pliku
-void readFile(char *filen, node *&H)
+void readFile(string filen, node *&H)
 {
 	ifstream f;
 	f.open(filen);
@@ -545,6 +546,40 @@ void swapPos(node *& H, int pos1, int pos2)
 	return;
 }
 
+//przenies na poczatek
+void addFirst(node *&H, node *& p)
+{
+	//guards
+	
+	if (p->next != NULL)
+	{
+		add(H, 0);
+		node* guard = H;
+		node* s = p->prev;
+		node* w = p->next;
+		s->next = p->next;
+		w->prev = p->prev;
+		node* d = H->next;
+		H->next = p;
+		p->prev = H;
+		p->next = d;
+		d->prev = p;
+
+		//delete guard
+		H = p;
+		delete guard;
+	}
+
+	else
+	{
+		p->prev->next = NULL;
+		node* d = H;
+		p->next = H;
+		p->prev = NULL;
+		H = p;
+	}
+}
+
 //sort while adding elements
 void ordered_insert(node *&H, int x)
 {
@@ -638,13 +673,15 @@ void insertion_sort(node* &H, bool by)
 				}
 				q = p->next;
 
-				/*
+				
+				
 				//Check if in fact insertion sort
-				Sleep(200);
+				
+				Sleep(150);
 				system("cls");
 				show(H);
 				cout << endl;
-				*/
+				
 				
 			}
 		
@@ -668,4 +705,56 @@ void insertion_sort(node* &H, bool by)
 	node* DEL = H;
 	H = H->next;
 	delete DEL;
+}
+
+//selection sort
+void selection_sort(node * &H)
+{
+	//pomocnicze
+	node* p = H;
+	node* s = H;
+	node* tmp_prev = H;
+	node* tmp_next = H;
+	//oddziela posortowana czesc listy od nieposortowanej
+	node* q = H;
+	//pomocniczy - oznacza minimalna wartosc
+	node* tmp = H;
+	//minimalna wartosc
+	int max = LONG_MIN;
+	//iterator
+	int iterator=0;
+
+	if (H == NULL || H->next == NULL)
+	{
+		return;
+	}
+
+	while (q)
+	{
+		q = H;
+		iterator++;
+		for (int i = 1; i < iterator; i++)
+		{
+			q = q->next;
+			if (q == NULL)
+			{
+				break;
+			}
+		}
+		p = q;
+		//znajdowanie maksimum
+		while (p)
+		{
+			if (p->val > max)
+			{
+				max = p->val;
+				tmp = p;
+			}
+			//cout << endl <<"p: " << p->val << "tmp: " << tmp->val << "max: " << max <<  endl;
+			p = p->next;
+		}
+		max = LONG_MIN;
+		addFirst(H, tmp);
+	}
+	
 }
