@@ -25,3 +25,7 @@ void ordered_insert(node *&H, int x);
 void insertion_sort(node* &H, bool by);
 void selection_sort(node * &H);
 void addFirst(node *& head, double value);
+void merge_sort(node*& H);
+node * merge_master(node*& H);
+node * merge_split(node* H);
+node * merge_merge(node  *H, node  *right);

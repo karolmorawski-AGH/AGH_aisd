@@ -677,10 +677,10 @@ void insertion_sort(node* &H, bool by)
 				
 				//Check if in fact insertion sort
 				
-				Sleep(150);
-				system("cls");
-				show(H);
-				cout << endl;
+				//Sleep(150);
+			//	system("cls");
+				//show(H);
+			//	cout << endl;
 				
 				
 			}
@@ -757,4 +757,89 @@ void selection_sort(node * &H)
 		addFirst(H, tmp);
 	}
 	
+}
+
+
+//merge sort - merge_sort - wywolanie w main; merge_master - wlasciwy mergesort, dzieli liste i laczy posortowana; merge_split - dzieli na polowki; merge_merge - laczy w posortowana liste 
+void merge_sort(node*& H)
+{
+	//guard
+	add(H, 0);
+	merge_master(H);
+
+	//usuwanie guarda
+	node* p = H;
+	H = H->next;
+	delete p;
+
+	//H->prev == NULL
+	H->prev = NULL;
+}
+
+node * merge_master (node*& H)
+{
+	//jesli jeden element lub lista pusta
+	if (H == NULL || H->next == NULL)
+	{
+		return H;
+	}
+
+	//dzielenie
+	node * right = merge_split(H);
+	H = merge_master(H);
+	right = merge_master(right);
+
+	//laczenie
+	return merge_merge(H, right);
+}
+
+node * merge_split(node* H) 
+{
+	node * p = H;
+	node * q = H;
+	
+	//dzielenie listy na 2 czesci
+	while (q->next && q->next->next) 
+	{
+		p = p->next;
+		q = q->next->next;	
+	}
+	//cout << "p: " << p->val << " q: " << q->val << endl;
+
+	node * tmp = p->next;
+	//cout << endl << "tmp: " << tmp->val << endl;
+	p->next = NULL;
+	return tmp;
+}
+
+node * merge_merge(node  *H, node  *right) 
+{
+	//jesli pierwszy element jest pusty
+	if (H == NULL)
+	{
+		return right;
+	}
+
+	//if jesli drugi element jest pusty
+	if (right == NULL)
+	{
+		return H;
+	}
+
+	//wybieranie mniejszej wartosci jako pierwszej
+	if (H->val <= right->val) 
+	{
+		H->next = merge_merge(H->next, right);
+
+		H->next->prev = H;
+		H->prev = NULL;
+		return H;
+	}
+	else 
+	{
+		right->next = merge_merge(H, right->next);
+		right->next->prev = right;
+		right->prev = NULL;
+		return right;
+	}
 }
