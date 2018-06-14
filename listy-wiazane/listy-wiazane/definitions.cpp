@@ -1,10 +1,11 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include <iostream>
 #include <fstream>
 #include <windows.h>
 #include <string>
 #include "node.h"
 #include "limits.h"
+#include <stdio.h>
 
 using namespace std;
 
@@ -77,6 +78,8 @@ void swapPrev(node* &H, int x)
 }
 
 //zamiana elementu o wartosci x ze swoim nastepnikiem
+//NIE DZIALA
+
 int swapNext(node* &H, int x)
 {
 	node* p = H;
@@ -135,7 +138,7 @@ void insert(node* &H, int x, int pos)
 
 }
 
-//usuwanie elementów
+//usuwanie elementÃ³w
 void rm(node *& H)
 {
 
@@ -194,7 +197,7 @@ void rmVal(node* &H, int x)
 
 }
 
-//dzielenie listy na 2 (input: pozycja i Header)
+//dzielenie listy na 2 (input: pozycja i Her)
 void divide_list(node* &H, int x)
 {
 	//sprawdzanie liczy elementow w liscie
@@ -231,7 +234,7 @@ void divide_list(node* &H, int x)
 		H2 = p->next;
 		p->next = NULL;
 
-		//pokazanie dwóch list
+		//pokazanie dwÃ³ch list
 		cout << "---------------------" << endl;
 		cout << "Pierwsza polowa listy (H1):     ";
 		show(H);
@@ -242,7 +245,26 @@ void divide_list(node* &H, int x)
 	
 }
 
-//get - sciaganie wartosci z listy (input: pozycja i Header)
+
+//get - sciaganie wartosci z listy (input: pozycja i Her)
+int get_val(node * H, int x)
+{
+	for (int i = 0; i < x; i++) 
+	{
+		if (H->next != NULL) 
+		{
+			H = H->next;
+		}
+		
+		else 
+		return false;
+
+	}
+
+	return H->val;
+}
+//stara wersja, nie uzywac
+/*
 int get_val(node* &H, int x)
 {
 	//sprawdzanie liczby elementow w liscie
@@ -259,7 +281,7 @@ int get_val(node* &H, int x)
 
 	if (x > l_el)
 	{
-		cout << "BLAD";
+		cout << "get_val(): podany argument wykracza poza liste" <<endl;
 		return -1;
 	}
 
@@ -271,9 +293,10 @@ int get_val(node* &H, int x)
 		}
 		return p->val;
 	}
-	
+
 
 }
+*/
 
 //set - ustawianie wartosci z listy o podanym indeksie
 void set_val(node* &H, int x, int pos)
@@ -436,8 +459,9 @@ void swapPos(node *& H, int pos1, int pos2)
 	}
 
 	//more than one element
-
-	int i = 1;
+	
+	//tutaj mozna dac 1
+	int i = 0;
 	
 
 	node * temp = H;
@@ -843,3 +867,69 @@ node * merge_merge(node  *H, node  *right)
 		return right;
 	}
 }
+
+//------------------------------------------------------------------//
+//								quicksort							//
+//------------------------------------------------------------------//
+
+void quickSort(node *& H) 
+{
+
+	//wartownik
+	add(H, 0);
+
+	node * p = H;
+	int i = 0;
+	while (p) {
+		i++;
+		p = p->next;
+	}
+
+	//quickSort
+	quickSortRecursion(H, 1, i - 1);
+
+	//usuwanie wartownika
+	node * del = H;
+	H = H->next;
+	delete del;
+
+	H->prev = NULL;
+
+}
+
+void quickSortRecursion(node * H, int l, int r)
+{
+
+	if (l >= r) {
+		return;
+	}
+
+	int pivot = partition(H, l, r);
+
+	quickSortRecursion(H, l, pivot - 1);
+	quickSortRecursion(H, pivot + 1, r);
+}
+
+int partition(node * H, int l, int r) {
+
+	//lomuto
+	int x = get_val(H, r);
+	int i = l - 1;
+
+	for (int j = l; j < r; j++)
+
+		if (get_val(H, j) < x) {
+			i++;
+			swapPos(H, i, j);
+		}
+
+	swapPos(H, i + 1, r);
+
+	return i + 1;
+}
+
+
+
+
+
+
